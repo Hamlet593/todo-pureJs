@@ -1,32 +1,35 @@
-const items = [];
+import render from './render.js'
+
+const todo_ulElement = document.querySelector('#todo-ulElement');
+const todo_input = document.querySelector('#todo-input');
+const todo_button = document.querySelector('#todo-button');
+const deleteAll = document.querySelector('#deleteAll')
+
+export const state = {
+  todoList: [],
+};
 
 let currentValue = '';
-
-const todo_input = document.querySelector('#todo-input');
-const todo_buton = document.querySelector('#todo-buton');
-const todo_ulEl = document.querySelector('#todo-ulEl');
 
 todo_input.addEventListener('change', evt => {
   currentValue = evt.target.value;
 })
 
-todo_buton.addEventListener('click', () => {
-  items.push({title: currentValue, id: items.length});
-  render(items, todo_ulEl)
-})
-
-let deleteButton = document.createElement('Button');
-deleteButton.innerHTML = ' X';
-
-deleteButton.addEventListener('click', () => {
-  todo_ulEl.li.innerHTML = '';
-})
-
-function render(items, todo_ulEl){
-  todo_ulEl.innerHTML = '';
-  items.forEach(item => {
-    todo_ulEl.appendChild(document.createElement('li')).innerHTML = item.title + deleteButton.innerHTML;
-
-  })
+export const setState = newState => {
+  state.todoList = newState;
+  render(state.todoList, todo_ulElement)
 }
 
+todo_button.addEventListener('click', () => {
+  setState([
+    ...state.todoList,
+    {
+      title: currentValue,
+      id: state.todoList.length,
+    }
+  ])
+})
+
+deleteAll.addEventListener('click', () => {
+  setState([])
+})
